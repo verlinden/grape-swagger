@@ -142,7 +142,8 @@ module Grape
                   notes       = as_markdown(route.route_notes)
                   http_codes  = parse_http_codes(route.route_http_codes)
 
-                  models << route.route_entity if route.route_entity
+                  models << route.route_entity               if route.route_entity
+                  models << route.route_additionnal_entities if route.route_additionnal_entities
 
                   operation = {
                     :produces   => content_types_for(target_class),
@@ -172,6 +173,7 @@ module Grape
 
               basePath                   = parse_base_path(base_path, request)
               api_description[:basePath] = basePath if basePath && basePath.size > 0
+              models.flatten!
               api_description[:models]   = parse_entity_models(models) unless models.empty?
 
               api_description
