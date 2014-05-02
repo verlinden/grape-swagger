@@ -195,13 +195,16 @@ module Grape
                 dataType    = value.is_a?(Hash) ? (value[:type] || 'String').to_s : 'String'
                 description = value.is_a?(Hash) ? value[:desc] || value[:description] : ''
                 required    = value.is_a?(Hash) ? !!value[:required] : false
-                defaultValue = value.is_a?(Hash) ? value[:defaultValue] : nil
+                defaultValue = value.is_a?(Hash) ? value[:default] : nil
                 paramType = if path.include?(":#{param}")
                    'path'
                 else
                   %w[ POST PUT PATCH ].include?(method) ? 'form' : 'query'
                 end
                 name        = (value.is_a?(Hash) && value[:full_name]) || param
+
+                # VS hack
+                dataType = 'Boolean' if dataType == 'Virtus::Attribute::Boolean'
 
                 parsed_params = {
                   paramType:    paramType,
@@ -294,6 +297,9 @@ module Grape
 
                 model.documentation.each do |property_name, property_info|
                   properties[property_name] = property_info
+
+                  #VS hack
+                  properties[property_name][:type] = 'Boolean' if properties[property_name][:type] == 'Virtus::Attribute::Boolean'
 
                   # rename Grape Entity's "desc" to "description"
                   if property_description = property_info.delete(:desc)
