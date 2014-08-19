@@ -152,7 +152,7 @@ module Grape
                     :nickname   => route.route_nickname || (route.route_method + route.route_path.gsub(/[\/:\(\)\.]/,'-')),
                     :httpMethod => route.route_method,
                     :parameters => parse_header_params(route.route_headers) +
-                      parse_params(route.route_params, route.route_path, route.route_method)
+                      parse_params(route.route_params, route.route_path, route.route_method).compact #VS Hack: added .compact
                   }
                   operation.merge!(:type => parse_entity_name(route.route_entity)) if route.route_entity
                   operation.merge!(:responseMessages => http_codes) unless http_codes.empty?
