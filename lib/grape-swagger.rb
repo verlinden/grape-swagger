@@ -205,6 +205,7 @@ module Grape
 
                 # VS hack
                 dataType = 'Boolean' if dataType == 'Virtus::Attribute::Boolean'
+                next if paramType == 'query' && dataType == 'Hash'
 
                 parsed_params = {
                   paramType:    paramType,
